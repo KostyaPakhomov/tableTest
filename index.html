@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пандемия</title>
+    <style>
+        .tab {
+            border-collapse: collapse;
+            text-align: center;
+            /* clear: both; */
+            margin: 5px;
+            border-color: red;
+        }
+        .onId {
+            float: left;
+            margin: 2px;
+        }
+        .onFam {
+            float: left;
+            margin: 2px;
+        }
+        .onName {
+            float: left;
+            margin: 2px;
+        }
+        .onAge {
+            margin: 2px;
+            float: left;
+        }
+        input {
+            margin: 2px;
+            background-color: yellow;
+            border-radius: 6px;
+            width: 120px;
+            height: 30px;
+        }
+        .butt {
+          width: auto;
+          height: 30px;
+          background-color: yellow;
+          border-radius: 6px;
+        }
+        .butt:hover {
+            background-color:tomato;
+            color: whitesmoke;
+        }
+        .butt:active {
+          background-color: rgba(59, 255, 92, 0.5);
+          color: red;
+        }
+        input:hover {
+            background-color:tomato;
+            color: whitesmoke;
+        }
+        input:active {
+          background-color: rgba(59, 255, 92, 0.5);
+          color: red;
+        }
+        #newID{
+          width: 70px;
+          height: 25px;
+          background-color: yellow;
+          color: red;
+          font-size: 16px;
+        }
+        #newFIO{
+          width: 200px;
+          height: 25px;
+          background-color: yellow;
+          color: red;
+          font-size: 16px;
+        }
+        #newAge{
+          width: 60px;
+          height: 25px;
+          background-color: yellow;
+          color: red;
+          font-size: 16px;
+        }
+        td {
+            font: italic bold 16px Arial;
+        }
+        td:nth-child(1) {
+            width: 82px;
+            background-color:lightblue;
+        }
+        td:nth-child(2) {
+            width: 212px;
+        }
+        td:nth-child(3) {
+            width: 72px;
+            background-color:lightblue;
+        }
+        td:nth-child(4) {
+            width: 200px;
+            visibility: hidden;
+        }
+        tr:hover > td:nth-child(4) {
+          visibility: visible;
+        }
+        tr {
+            height: 30px;
+        }
+        tr:nth-child(odd) {
+            background-color:palegreen;
+        }
+        th {
+            background-color:forestgreen;
+            color: whitesmoke;
+        }
+        tr:nth-child(odd) td:nth-child(1) {
+            background-color: white;
+        }
+        tr:nth-child(odd) td:nth-child(3) {
+            background-color: white;
+        }
+        body tr:hover {
+            background-color:rgb(255, 200, 80);
+            color:rgb(29, 4, 253);
+        }
+        .hidden {
+          display: none;
+        }
+        #forma1 {
+          display: none;
+        }
+        #forma2 {
+          display: none;
+          position: fixed;
+          top: 25%;
+          right: 25%;
+        }
+        #table-holder{
+          float: left;
+        }
+        .format {
+          border: red 3px solid; 
+        }
+        #forNewPers {
+          width: auto;
+        }
+        #subm {
+          width: auto;
+        }
+    </style>
+</head>
+<body>
+    <script id='jsonn' type="text/javascript" src="small_data_persons.json"></script>
+    <div class="onId">
+        <input type='button' value='По ID &uarr;' onclick='sortOpt1Up()'>
+        <br>
+        <input type='button' value='По ID &darr;' onclick='sortOpt1Down()'>
+    
+    </div>
+    <div class="onFam">
+        <input type='button' value='По фамилии &uarr;' onclick='sortOpt2Up()'>
+        <br>
+        <input type='button' value='По фамилии &darr;' onclick='sortOpt2Down()'>
+    
+    </div>
+    <div class="onName">
+        <input type='button' value='По имени &uarr;' onclick='sortOpt3Up()'>
+        <br>
+        <input type='button' value='По имени &darr;' onclick='sortOpt3Down()'>
+    
+    </div>
+    <div class="onAge">
+        <input type='button' value='По возрасту &uarr;' onclick='sortOpt4Up()'>
+        <br>
+        <input type='button' value='По возрасту &darr;' onclick='sortOpt4Down()'>
+    
+    </div><br/><br/><br/><br/>
+
+    <div id="table-holder"></div><br>
+    <div>
+      <input id="forNewPers" type="button" onclick="showForm1()" value='Добавить человека'>
+    </div>
+    <div id ="forms">
+      <form id="forma1" name='FORM' novalidate>
+        Новый ID: <input id="newID" type='text' style='width: 300px' name="ID"><br /><br/>
+        Новые фамилия и имя: <input id="newFIO" type='text' style='width: 300px' name="FIO"><br /><br/>
+        Новый возраст: <input id="newAge" type='text' style='width: 300px' name="AGE"><br /><br/>
+        <input id="subm" type="button" onclick="testForm()" value='Добавить человека'>
+        <input id="subm" type="button" onclick="hideForm1()" value='Отмена'>
+      </form>
+    <form id="forma2" name='FORM' novalidate>
+      Новый ID: <input id="newID2" type='text' style='width: 300px' name="ID"><br /><br/>
+      Новые фамилия и имя: <input id="newFIO2" type='text' style='width: 300px' name="FIO"><br /><br/>
+      Новый возраст: <input id="newAge2" type='text' style='width: 300px' name="AGE"><br /><br/>
+      <input id="subm" type="button" onclick="testForm2()" value='Сохранить'>
+      <input id="subm" type="button" onclick="hideForm2()" value='Отмена'>
+    </form>
+    </div>
+    <script>
+    
+        "use strict";
+    // загрузка JSON файла
+    var newJson = document.getElementById('jsonn');
+    var par = JSON.parse(data);
+    
+    // создание таблицы
+    function makeTable() {
+      var tableHolder = document.getElementById('table-holder');
+      var contents = '<thead><th>ID</th><th>Фамилия и имя</th><th>Возраст</th></thead>';
+      contents += '<tbody>';
+      for (var i = 0; i < par.length; i++) {
+        contents += "<tr><td>"+ par[i].ID +"</td><td>"+ par[i].Name +
+        "</td><td>"+ par[i].Age +"</td></tr>";
+      }
+      contents += '</tbody>';
+      tableHolder.innerHTML = '<table border=1 class="tab" id="tab">' + 
+      contents + '</table>';
+    }
+    makeTable();
+
+    // сортировка по возрвстанию ID
+    function sortOpt1Up(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.firstChild.innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        return a.value - b.value;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+    // сортировка по убыванию ID
+    function sortOpt1Down(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.firstChild.innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        return  b.value - a.value;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+
+    // сортировка по возрвстанию фамилии
+    function sortOpt2Up(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[1].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+          var famA=a.value.toLowerCase(), famB=b.value.toLowerCase();
+          if (famA<famB)
+          return -1;
+          if (famA>famB)
+          return 1;
+        return 0;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+    // сортировка по убыванию фамилии
+    function sortOpt2Down(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[1].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        var famA=a.value.toLowerCase(), famB=b.value.toLowerCase();
+          if (famA<famB)
+          return 1;
+          if (famA>famB)
+          return -1;
+        return 0;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+
+    // сортировка по возрвстанию имени
+    function sortOpt3Up(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[1].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        var nameA=a.value.split(' ').reverse().join(' ').toLowerCase(), nameB=b.value.split(' ').reverse().join(' ').toLowerCase();
+          if (nameA<nameB)
+          return -1;
+          if (nameA>nameB)
+          return 1;
+        return 0;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+    // сортировка по убыванию имени
+    function sortOpt3Down(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[1].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        var nameA=a.value.split(' ').reverse().join(' ').toLowerCase(), nameB=b.value.split(' ').reverse().join(' ').toLowerCase();
+          if (nameA<nameB)
+          return 1;
+          if (nameA>nameB)
+          return -1;
+        return 0;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+
+    // сортировка по возрвстанию возраста
+    function sortOpt4Up(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[2].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        return a.value - b.value;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+    // сортировка по убыванию возраста
+    function sortOpt4Down(doRemove) {
+      var tbody = document.getElementsByTagName('tbody')[0];
+      var table = tbody.parentNode;
+      if (doRemove) table.removeChild(tbody);
+      var rows = [];
+      for (var i = 0; i < tbody.children.length; i++) {
+        var elem = tbody.children[i];
+        rows.push({
+          value: elem.childNodes[2].innerHTML,
+          elem: elem
+        });
+      }
+      rows.sort(function(a, b) {
+        return b.value - a.value;
+      });
+      for (var i = 0; i < rows.length; i++) {
+        tbody.appendChild(rows[i].elem);
+      }
+      if (doRemove) table.appendChild(tbody);
+    }
+
+// добавление кнопок в конец строки
+let procRows = tab.querySelectorAll("tbody tr");
+for (let i = 0; i < procRows.length; i++) {
+  procRows[i].innerHTML += '<td><button  title="Remove" class="butt">Удалить</button>'+
+  '<input type="button" class="butt" value="Форматировать"></td>';
+}
+// показать форму при нажатии на кнопку "Форматировать" и присвоение класса строке
+tab.querySelector("tbody").addEventListener("click", function(e) {
+ if (e.target.nodeName == 'INPUT') {
+ var cell = e.target.parentNode; 
+ cell.parentNode.classList.add("format");
+showForm2(); 
+}
+});
+
+// по нажатии кнопки присваивается класс строке, к которой относится данная кнопка
+tab.querySelector("tbody").addEventListener("click", function(e) {
+ if (e.target.nodeName == "BUTTON") {
+ let cell = e.target.parentNode; 
+ cell.parentNode.classList.add("hidden");
+ e.target.remove();
+ }
+});
+
+// показать форму для новых людей
+function showForm1(){
+  var formView = document.getElementById("forma1");
+  formView.style.display = "block";
+  var btnAddPers = document.getElementById("forNewPers");
+  btnAddPers.style.visibility = "hidden";
+}
+// спрятать форму для новых людей
+function hideForm1(){
+  var formView = document.getElementById("forma1");
+  formView.style.display = "none";
+  var btnAddPers = document.getElementById("forNewPers");
+  btnAddPers.style.visibility = "visible";
+}
+// показать форму для редактируемых людей
+function showForm2(){
+  var formView = document.getElementById("forma2");
+  formView.style.display = "block";
+  var btnAddPers = document.getElementById("forNewPers");
+  btnAddPers.style.visibility = "hidden";
+}
+// спрятать форму для редактируемых людей и удалить класс строки
+function hideForm2(){
+  var formView = document.getElementById("forma2");
+  formView.style.display = "none";
+  var btnAddPers = document.getElementById("forNewPers");
+  btnAddPers.style.visibility = "visible";
+  var delFormat = document.getElementsByClassName("format");
+  delFormat[0].classList.remove("format");
+}
+
+// добавить нового человека
+function addRow(){
+let proRows = tab.querySelectorAll("tbody");
+for (let i = 0; i < proRows.length; i++) {
+  var nID=document.getElementById("newID").value;
+  var nFIO=document.getElementById("newFIO").value;
+  var nAge=document.getElementById("newAge").value;
+  proRows[i].innerHTML += '<tr><td>'+nID+'</td>'+
+  '<td>'+nFIO+'</td>'+
+  '<td>'+nAge+'</td>'+'<td><button  title="Remove" class="butt">Удалить</button></td>'
+}
+}
+
+// отредактировать человека
+function addRow2(){
+  var nID2=document.getElementById("newID2").value;
+  var nFIO2=document.getElementById("newFIO2").value;
+  var nAge2=document.getElementById("newAge2").value;
+  var trTd = document.getElementsByClassName("format");
+   for (var d=0; d<trTd.length; d++){
+    var elemTd=trTd[d];
+  elemTd.childNodes[0].innerHTML= nID2;
+  elemTd.childNodes[1].innerHTML= nFIO2;
+  elemTd.childNodes[2].innerHTML= nAge2;
+  }
+}
+
+// проверка формы нового человека
+function testForm(){
+  var personID=/[0-9_]/;
+  var personFIO=/[А-Яа-я]|\s/;
+  var personAge=/[0-9_]/;
+  var elemID=document.getElementById("newID");
+  var valueID=elemID.value;
+  var elemFIO=document.getElementById("newFIO");
+  var valueFIO=elemFIO.value;
+  var elemAge=document.getElementById("newAge");
+  var valueAge=elemAge.value;
+    var numAge=parseFloat(valueAge);
+    var fixAge=numAge.toFixed(4);
+    var numAgeNew=parseFloat(fixAge);
+
+  if (!personID.test(valueID)){
+    alert('В поле ID могут быть только цифры, без пробелов!');
+    elemID.focus();
+  } else if (!personFIO.test(valueFIO)||valueFIO.length>100){
+    alert('В поле ФИО могут быть только'+ 
+    'Фамилия и имя на русском, либо количество символов превышает 100 знаков');
+    elemFIO.focus();
+  } else if (!personAge.test(valueAge)||numAgeNew>1000){
+    alert('В поле Возраст могут быть только цифры,'+
+    ' без пробелов, возраст не должен превышать 1000 лет!');
+    elemAge.focus();
+  } else {
+      setTimeout(addRow(),1000)
+      return hideForm1();
+      }
+  }
+  // проверка формы редактируемого человека
+  function testForm2(){
+  var personID=/[0-9_]/;
+  var personFIO=/[А-Яа-я]|\s/;
+  var personAge=/[0-9_]/;
+  var elemID=document.getElementById("newID2");
+  var valueID=elemID.value;
+  var elemFIO=document.getElementById("newFIO2");
+  var valueFIO=elemFIO.value;
+  var elemAge=document.getElementById("newAge2");
+  var valueAge=elemAge.value;
+    var numAge=parseFloat(valueAge);
+    var fixAge=numAge.toFixed(4);
+    var numAgeNew=parseFloat(fixAge);
+
+  if (!personID.test(valueID)){
+    alert('В поле ID могут быть только цифры, без пробелов!');
+    elemID.focus();
+  } else if (!personFIO.test(valueFIO)||valueFIO.length>100){
+    alert('В поле ФИО могут быть только'+ 
+    'Фамилия и имя на русском, либо количество символов превышает 100 знаков');
+    elemFIO.focus();
+  } else if (!personAge.test(valueAge)||numAgeNew>1000){
+    alert('В поле Возраст могут быть только цифры,'+
+    ' без пробелов, возраст не должен превышать 1000 лет!');
+    elemAge.focus();
+  } else {
+      setTimeout(addRow2(),1000);
+      return hideForm2();
+      }
+  }
+
+  </script>
+</body>
+</html>
